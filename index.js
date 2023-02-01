@@ -56,15 +56,23 @@ const player1 = new Figther ({
         attack1:{
             imagesrc:"./img/samurai/Attack1.png",
             frameMax: 6,
+        },
+        takehit:{
+            imagesrc:"./img/samurai/Take Hit.png",
+            frameMax: 4,
+        },
+        death:{
+            imagesrc:"./img/samurai/Death.png",
+            frameMax: 6,
         }
     },
     attackbox:{
         offset:{
-            x:120,
-            y:40
+            x:90,
+            y:10
         },
-        width:100,
-        height:50
+        width:130,
+        height:100
     }
 });
  
@@ -104,15 +112,23 @@ const opponent = new Figther({
         attack1:{
             imagesrc:"./img/monk/Attack1.png",
             frameMax: 7,
+        },
+        takehit:{
+            imagesrc:"./img/monk/Take Hit.png",
+            frameMax: 3,
+        },
+        death:{
+            imagesrc:"./img/monk/Death.png",
+            frameMax: 11,
         }
     },
     attackbox:{
         offset:{
-            x:-245,
-            y:47
+            x:-180,
+            y:30
         },
-        width:100,
-        height:65
+        width:110,
+        height:100
     }
 });
 
@@ -139,7 +155,7 @@ const keys = {
 }
 
 window.addEventListener('keydown',(event) =>{
-
+    if(!player1.dead){
     switch(event.key){
         case 'w':
             player1.velocity.y = -20
@@ -156,12 +172,11 @@ window.addEventListener('keydown',(event) =>{
         break
         case 'k':
             player1.attack();
-        break
-                        
+        break                   
+        }
     }
-
     // Opponent Keys
-
+    if(!opponent.dead){
     switch(event.key){
         case 'ArrowUp':
             opponent.velocity.y = -20
@@ -180,6 +195,7 @@ window.addEventListener('keydown',(event) =>{
             opponent.attack();
         break
                         
+        }
     }
 });
 
@@ -216,9 +232,11 @@ function determineWinner(player1, opponent){
         }
     else if( player1.health > opponent.health ){
             document.querySelector('#displayText').innerHTML = 'Player 1 Wins'
+            opponent.swichSprites('death')
         }
     else if(opponent.health > player1.health){
             document.querySelector('#displayText').innerHTML = 'Player 2 Wins'
+            player1.swichSprites('death')
         }
 }
 
@@ -299,18 +317,27 @@ function animate(){
 
 // Attack
 
-    if(colision({obj1 : player1, obj2 : opponent}) && player1.attacking === true){
-            player1.attacking = false;
-            console.log('Ataque');
-            opponent.health -= 20;
-            document.querySelector('#player2HealthBar').style.width = opponent.health + '%'
+    if(colision({obj1 : player1, obj2 : opponent}) && 
+    player1.attacking && 
+    player1.framesCurrent === 4){
+        opponent.takeHit()
+        document.querySelector('#player2HealthBar').style.width = opponent.health + '%'
     }
-    if(colision({obj1 : opponent, obj2 : player1}) && opponent.attacking === true){
-        opponent.attacking = false;
-        console.log('Opponent Hit');
-        player1.health -= 20;
+    if(player1.attacking && player1.framesCurrent === 4){
+        player1.attacking = false
+    }
+
+    if(colision({obj1 : opponent, obj2 : player1}) && 
+    opponent.attacking &&
+    opponent.framesCurrent === 5){
+        player1.takeHit()
         document.querySelector('#player1HealthBar').style.width = player1.health + '%'
-}
+    }
+    if(opponent.attacking && opponent.framesCurrent === 5){
+        opponent.attacking = false
+    }
+
+    
 // Win
 
     if(player1.health <=0 || opponent.health <=0){
