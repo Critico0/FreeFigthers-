@@ -1,13 +1,16 @@
 class Figther extends Sprite {
     constructor({
         position ,
+        doubleHit,
         velocity, 
         imagesrc, 
         scale = 1, 
         frameMax = 1, 
+        hitFrame,
         offset ={x:0,y:0}, 
         sprites,
-        attackbox={offset:{}, width:undefined, height: undefined}
+        attackbox={offset:{}, width:undefined, height: undefined},
+        lastDirection
     })
     {
     super({position ,imagesrc , scale , frameMax, offset })
@@ -15,7 +18,6 @@ class Figther extends Sprite {
         this.velocity = velocity;
         this.height = 150;
         this.width = 50;
-        this.lastKey;
         this.attackbox={
             position: {
                 x : this.position.x,
@@ -32,6 +34,9 @@ class Figther extends Sprite {
         this.frameHold = 5;
         this.sprites = sprites;
         this.dead = false;
+        this.doubleHit = doubleHit;
+        this.hitFrame = hitFrame;
+        this.lastDirection = lastDirection;
 
         for(const sprite in this.sprites){
             sprites[sprite].image = new Image()
@@ -53,9 +58,29 @@ class Figther extends Sprite {
     }
 
     attack(){
-        this.swichSprites('attack1')
-        this.attacking = true
+        if(this.lastDirection === 'right'){
+        if(this.doubleHit ){
+            this.swichSprites('attack2')
+            setTimeout(()=>{
+                this.doubleHit = false
+            },1000)
+        }else{
+            this.swichSprites('attack1')
+        }
     }
+        if(this.lastDirection === 'left'){
+            if(this.doubleHit){
+                this.swichSprites('attack2left')
+                setTimeout(()=>{
+                    this.doubleHit = false
+                },1000)
+            }else{
+                this.swichSprites('attack1left')
+            }
+    }
+        this.attacking = true
+    
+}
 
     takeHit(){
         this.swichSprites('takehit')
@@ -66,19 +91,41 @@ class Figther extends Sprite {
         if(this.image === this.sprites.attack1.image &&
             this.framesCurrent < this.sprites.attack1.frameMax -1
             ) return
-
+            if(this.image === this.sprites.attack1left.image &&
+                this.framesCurrent < this.sprites.attack1left.frameMax -1
+                ) return
+            if(this.image === this.sprites.attack2.image &&
+                this.framesCurrent < this.sprites.attack2.frameMax -1
+                ) return
+                if(this.image === this.sprites.attack2left.image &&
+                    this.framesCurrent < this.sprites.attack2left.frameMax -1
+                    ) return
         if(this.image === this.sprites.takehit.image &&
             this.framesCurrent < this.sprites.takehit.frameMax -1
             ) return
+            if(this.image === this.sprites.takehitleft.image &&
+                this.framesCurrent < this.sprites.takehitleft.frameMax -1
+                ) return
         if(this.image === this.sprites.death.image){
             (this.framesCurrent < this.sprites.death.frameMax -1)
             this.dead = true
              return}
+             if(this.image === this.sprites.deathleft.image){
+                (this.framesCurrent < this.sprites.deathleft.frameMax -1)
+                this.dead = true
+                 return}
 
         switch(sprite){
             case 'idle':
                 if(this.image !== this.sprites.idle.image){
                 this.image = this.sprites.idle.image
+                this.frameMax = this.sprites.idle.frameMax
+                this.framesCurrent = 0
+                }
+            break;
+            case 'idleleft':
+                if(this.image !== this.sprites.idleleft.image){
+                this.image = this.sprites.idleleft.image
                 this.frameMax = this.sprites.idle.frameMax
                 this.framesCurrent = 0
                 }
@@ -104,6 +151,13 @@ class Figther extends Sprite {
                 this.framesCurrent = 0
                 }
             break;
+            case 'jumpleft':
+                if(this.image !== this.sprites.jumpleft.image){
+                this.image = this.sprites.jumpleft.image
+                this.frameMax = this.sprites.jumpleft.frameMax
+                this.framesCurrent = 0
+                }
+            break;
             case 'fall':
                 if(this.image !== this.sprites.fall.image){
                 this.image = this.sprites.fall.image
@@ -111,10 +165,42 @@ class Figther extends Sprite {
                 this.framesCurrent = 0
                 }
             break;
+            case 'fallleft':
+                if(this.image !== this.sprites.fallleft.image){
+                this.image = this.sprites.fallleft.image
+                this.frameMax = this.sprites.fallleft.frameMax
+                this.framesCurrent = 0
+                }
+            break;
             case 'attack1':
                 if(this.image !== this.sprites.attack1.image){
                 this.image = this.sprites.attack1.image
                 this.frameMax = this.sprites.attack1.frameMax
+                this.hitFrame = this.sprites.attack1.hitFrame
+                this.framesCurrent = 0
+                }
+            break;
+            case 'attack1left':
+                if(this.image !== this.sprites.attack1left.image){
+                this.image = this.sprites.attack1left.image
+                this.frameMax = this.sprites.attack1left.frameMax
+                this.hitFrame = this.sprites.attack1left.hitFrame
+                this.framesCurrent = 0
+                }
+            break;
+            case 'attack2':
+                if(this.image !== this.sprites.attack2.image){
+                this.image = this.sprites.attack2.image
+                this.frameMax = this.sprites.attack2.frameMax
+                this.hitFrame = this.sprites.attack2.hitFrame
+                this.framesCurrent = 0
+                }
+            break;
+            case 'attack2left':
+                if(this.image !== this.sprites.attack2left.image){
+                this.image = this.sprites.attack2left.image
+                this.frameMax = this.sprites.attack2left.frameMax
+                this.hitFrame = this.sprites.attack2left.hitFrame
                 this.framesCurrent = 0
                 }
             break;
@@ -125,10 +211,24 @@ class Figther extends Sprite {
                 this.framesCurrent = 0
                 }
             break;
+            case 'takehitleft':
+                if(this.image !== this.sprites.takehitleft.image){
+                this.image = this.sprites.takehitleft.image
+                this.frameMax = this.sprites.takehitleft.frameMax
+                this.framesCurrent = 0
+                }
+            break;
             case 'death':
                 if(this.image !== this.sprites.death.image){
                 this.image = this.sprites.death.image
                 this.frameMax = this.sprites.death.frameMax
+                this.framesCurrent = 0
+                }
+            break;
+            case 'deathleft':
+                if(this.image !== this.sprites.deathleft.image){
+                this.image = this.sprites.deathleft.image
+                this.frameMax = this.sprites.deathleft.frameMax
                 this.framesCurrent = 0
                 }
             break;

@@ -22,8 +22,10 @@ const player1 = new Figther ({
     position: {x: 256, y: 100},
     imagesrc:"./img/samurai/Idle.png",
     frameMax: 8,
+    doubleHit: false,
     velocity: {x: 0, y: 0},
     scale: 2.5,
+    lastDirection: 'right',
     offset:{
         x: 250,
         y: 165
@@ -31,6 +33,10 @@ const player1 = new Figther ({
     sprites:{
         idle:{
             imagesrc:"./img/samurai/Idle.png",
+            frameMax: 8,
+        },
+        idleleft:{
+            imagesrc:"./img/samurai/Idleleft.png",
             frameMax: 8,
         },
 
@@ -48,23 +54,55 @@ const player1 = new Figther ({
             imagesrc:"./img/samurai/Jump.png",
             frameMax: 2,
         },
+        jumpleft:{
+            imagesrc:"./img/samurai/Jumpleft.png",
+            frameMax: 2,
+        },
 
         fall:{
             imagesrc:"./img/samurai/Fall.png",
             frameMax: 2,
         },
+        fallleft:{
+            imagesrc:"./img/samurai/Fallleft.png",
+            frameMax: 2,
+        },
         attack1:{
             imagesrc:"./img/samurai/Attack1.png",
             frameMax: 6,
+            hitFrame: 4,
+        },
+        attack1left:{
+            imagesrc:"./img/samurai/Attack1left.png",
+            frameMax: 6,
+            hitFrame: 4,
+        },
+        attack2:{
+            imagesrc:"./img/samurai/Attack2.png",
+            frameMax: 6,
+            hitFrame: 4,
+        },
+        attack2left:{
+            imagesrc:"./img/samurai/Attack2left.png",
+            frameMax: 6,
+            hitFrame: 4,
         },
         takehit:{
             imagesrc:"./img/samurai/Take Hit.png",
             frameMax: 4,
         },
+        takehitleft:{
+            imagesrc:"./img/samurai/Takehitleft.png",
+            frameMax: 4,
+        },
         death:{
             imagesrc:"./img/samurai/Death.png",
             frameMax: 6,
-        }
+        },
+        deathleft:{
+            imagesrc:"./img/samurai/Deathleft.png",
+            frameMax: 6,
+        },
     },
     attackbox:{
         offset:{
@@ -81,10 +119,12 @@ const player1 = new Figther ({
 
 const opponent = new Figther({
     position: {x: 656, y: 100},
-    imagesrc:"./img/monk/Idle.png",
+    imagesrc:"./img/monk/Idleleft.png",
     frameMax: 10,
+    doubleHit: false,
     velocity: {x: 0, y: 0},
     scale:2.5,
+    lastDirection: 'left',
     offset: {
         x: 180,
         y: 65
@@ -94,9 +134,17 @@ const opponent = new Figther({
             imagesrc:"./img/monk/Idle.png",
             frameMax: 10,
         },
+        idleleft:{
+            imagesrc:"./img/monk/Idleleft.png",
+            frameMax: 10,
+        },
 
         run:{
             imagesrc:"./img/monk/Run.png",
+            frameMax: 8,
+        },
+        runleft:{
+            imagesrc:"./img/monk/Runleft.png",
             frameMax: 8,
         },
 
@@ -104,21 +152,53 @@ const opponent = new Figther({
             imagesrc:"./img/monk/Jump.png",
             frameMax: 3,
         },
+        jumpleft:{
+            imagesrc:"./img/monk/Jumpleft.png",
+            frameMax: 3,
+        },
 
         fall:{
             imagesrc:"./img/monk/Fall.png",
             frameMax: 3,
         },
+        fallleft:{
+            imagesrc:"./img/monk/Fallleft.png",
+            frameMax: 3,
+        },
         attack1:{
             imagesrc:"./img/monk/Attack1.png",
             frameMax: 7,
+            hitFrame: 5,
+        },
+        attack1left:{
+            imagesrc:"./img/monk/Attack1left.png",
+            frameMax: 7,
+            hitFrame: 5,
+        },
+        attack2:{
+            imagesrc:"./img/monk/Attack2.png",
+            frameMax: 6,
+            hitFrame: 3,
+        },
+        attack2left:{
+            imagesrc:"./img/monk/Attack2left.png",
+            frameMax: 6,
+            hitFrame: 3,
         },
         takehit:{
             imagesrc:"./img/monk/Take Hit.png",
             frameMax: 3,
         },
+        takehitleft:{
+            imagesrc:"./img/monk/Take Hitleft.png",
+            frameMax: 3,
+        },
         death:{
             imagesrc:"./img/monk/Death.png",
+            frameMax: 11,
+        },
+        deathleft:{
+            imagesrc:"./img/monk/Deathleft.png",
             frameMax: 11,
         }
     },
@@ -164,14 +244,19 @@ window.addEventListener('keydown',(event) =>{
             keys.a.pressed = true
             //player1.attackbox.offset.x = -50
             player1.lastKey = 'a'
+            player1.attackbox.offset.x = -220
+            player1.lastDirection = 'left'
         break
         case 'd':
             keys.d.pressed = true
             //player1.attackbox.offset.x = 0
             player1.lastKey = 'd'
+            player1.attackbox.offset.x = 90
+            player1.lastDirection = 'right'
         break
         case 'k':
-            player1.attack();
+                player1.attack();
+                player1.doubleHit = true;
         break                   
         }
     }
@@ -185,14 +270,19 @@ window.addEventListener('keydown',(event) =>{
             keys.ArrowLeft.pressed = true
             //opponent.attackbox.offset.x = -50
             opponent.lastKey = 'ArrowLeft'
+            opponent.attackbox.offset.x = -180
+            opponent.lastDirection = 'left'
         break
         case 'ArrowRight':
             keys.ArrowRigth.pressed = true
             //opponent.attackbox.offset.x = 0
             opponent.lastKey = 'ArrowRight'
+            opponent.attackbox.offset.x = 20
+            opponent.lastDirection = 'right'
         break
         case '0':
             opponent.attack();
+            opponent.doubleHit = true;
         break
                         
         }
@@ -232,11 +322,20 @@ function determineWinner(player1, opponent){
         }
     else if( player1.health > opponent.health ){
             document.querySelector('#displayText').innerHTML = 'Player 1 Wins'
-            opponent.swichSprites('death')
+            if(opponent.lastDirection === 'left'){
+                opponent.swichSprites('deathleft')
+            }else{
+                opponent.swichSprites('death')
+            }
+            
         }
     else if(opponent.health > player1.health){
             document.querySelector('#displayText').innerHTML = 'Player 2 Wins'
-            player1.swichSprites('death')
+            if(player1.lastDirection === 'left'){
+                player1.swichSprites('deathleft')
+            }else{
+                player1.swichSprites('death')
+            }          
         }
 }
 
@@ -277,63 +376,99 @@ function animate(){
     player1.update();
     opponent.update();
 
+
+
     player1.velocity.x = 0
     opponent.velocity.x = 0
 
 // keyboar movement Player
-
-    if(keys.a.pressed && player1.lastKey === 'a'){
-        player1.velocity.x = -5
-        player1.swichSprites('runleft')
-    }else if (keys.d.pressed && player1.lastKey === 'd'){
-        player1.velocity.x = +5
-        player1.swichSprites('run')
-    }else{
-        player1.swichSprites('idle')
+    if(player1.lastDirection === 'left'){
+        if(keys.a.pressed){
+            player1.velocity.x = -5
+            player1.swichSprites('runleft')
+            }else{
+                player1.swichSprites('idleleft')
+            }
+            if(player1.velocity.y < 0){
+                player1.swichSprites('jumpleft')
+             }else if(player1.velocity.y > 0){
+                player1.swichSprites('fallleft')
+            }
     }
 
-    if(player1.velocity.y < 0){
-       player1.swichSprites('jump')
-    }else if(player1.velocity.y > 0){
-        player1.swichSprites('fall')
+    if(player1.lastDirection === 'right'){
+        if (keys.d.pressed && player1.lastKey === 'd'){
+            player1.velocity.x = +5
+            player1.swichSprites('run')
+        }else{
+            player1.swichSprites('idle')
+        }
+        if(player1.velocity.y < 0){
+            player1.swichSprites('jump')
+        }
+           else if(player1.velocity.y > 0){
+            player1.swichSprites('fall')
+        }
     }
+    
+    
 // keyboar movement Opponent
-    if(keys.ArrowLeft.pressed && opponent.lastKey === 'ArrowLeft'){
-        opponent.velocity.x = -5
-        opponent.swichSprites('run')
-        console.log(keys.ArrowLeft.pressed)
-    }else if (keys.ArrowRigth.pressed && opponent.lastKey === 'ArrowRight'){
-        opponent.velocity.x = +5
-        opponent.swichSprites('run')
-    }else{
-        opponent.swichSprites('idle')
-    }
 
-    if(opponent.velocity.y < 0){
-        opponent.swichSprites('jump')
-     }else if(opponent.velocity.y > 0){
-         opponent.swichSprites('fall')
-     }
+    if(opponent.lastDirection === 'left'){
+        if(keys.ArrowLeft.pressed && opponent.lastKey === 'ArrowLeft'){
+            opponent.velocity.x = -5
+            opponent.swichSprites('runleft')
+        }else{
+            opponent.swichSprites('idleleft')
+        }
+        if(opponent.velocity.y < 0){
+            opponent.swichSprites('jumpleft')
+         }else if(opponent.velocity.y > 0){
+             opponent.swichSprites('fallleft')
+         }
+}
+    if(opponent.lastDirection === 'right'){
+        if (keys.ArrowRigth.pressed && opponent.lastKey === 'ArrowRight'){
+            opponent.velocity.x = +5
+            opponent.swichSprites('run')
+        }else{
+            opponent.swichSprites('idle')
+        }
+        if(opponent.velocity.y < 0){
+            opponent.swichSprites('jump')
+         }else if(opponent.velocity.y > 0){
+             opponent.swichSprites('fall')
+         }
+}
+
 
 // Attack
 
     if(colision({obj1 : player1, obj2 : opponent}) && 
     player1.attacking && 
-    player1.framesCurrent === 4){
-        opponent.takeHit()
+    player1.framesCurrent === player1.hitFrame){
+        if(opponent.lastDirection === 'left'){
+            opponent.takehitleft()
+        }else{
+            opponent.takeHit()
+        }
         document.querySelector('#player2HealthBar').style.width = opponent.health + '%'
     }
-    if(player1.attacking && player1.framesCurrent === 4){
+    if(player1.attacking && player1.framesCurrent === player1.hitFrame){
         player1.attacking = false
     }
 
     if(colision({obj1 : opponent, obj2 : player1}) && 
     opponent.attacking &&
-    opponent.framesCurrent === 5){
-        player1.takeHit()
+    opponent.framesCurrent === opponent.hitFrame){
+        if(player1.lastDirection === 'left'){
+            player1.takehitleft()
+        }else{
+            player1.takeHit()
+        }
         document.querySelector('#player1HealthBar').style.width = player1.health + '%'
     }
-    if(opponent.attacking && opponent.framesCurrent === 5){
+    if(opponent.attacking && opponent.framesCurrent === opponent.hitFrame){
         opponent.attacking = false
     }
 
