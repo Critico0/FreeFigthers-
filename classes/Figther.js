@@ -2,7 +2,8 @@ class Figther extends Sprite {
     constructor({
         position ,
         doubleHit,
-        velocity, 
+        velocity,
+        grounded, 
         imagesrc, 
         scale = 1, 
         frameMax = 1, 
@@ -18,6 +19,7 @@ class Figther extends Sprite {
         this.velocity = velocity;
         this.height = 150;
         this.width = 50;
+        this.grounded = grounded
         this.attackbox={
             position: {
                 x : this.position.x,

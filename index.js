@@ -26,6 +26,7 @@ const player1 = new Figther ({
     velocity: {x: 0, y: 0},
     scale: 2.5,
     lastDirection: 'right',
+    grounded : true,
     offset:{
         x: 250,
         y: 165
@@ -121,6 +122,7 @@ const opponent = new Figther({
     velocity: {x: 0, y: 0},
     scale:2.5,
     lastDirection: 'left',
+    grounded : true,
     offset: {
         x: 180,
         y: 65
@@ -228,14 +230,14 @@ const keys = {
 }
 
 window.addEventListener('keydown',(event) =>{
-    if(!player1.dead){
+    if(!player1.dead && timer > 0){
     switch(event.key){
         case 'w':
-            if(player1.lastKey != 'w'){
+            if(player1.grounded == true){
                 player1.velocity.y = -20
-                player1.lastKey = 'w'
+                player1.grounded = false
                 setTimeout(()=>{
-                    player1.lastKey = ''
+                    player1.grounded = true
                 },1000)
             }
         break
@@ -260,10 +262,16 @@ window.addEventListener('keydown',(event) =>{
         }
     }
     // Opponent Keys
-    if(!opponent.dead){
+    if(!opponent.dead && timer > 0){
     switch(event.key){
         case 'ArrowUp':
-            opponent.velocity.y = -20
+            if(opponent.grounded == true){
+                opponent.velocity.y = -20
+                opponent.grounded = false
+                setTimeout(()=>{
+                    opponent.grounded = true
+                },1000)
+            }
         break
         case 'ArrowLeft':
             keys.ArrowLeft.pressed = true
