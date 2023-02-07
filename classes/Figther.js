@@ -90,7 +90,7 @@ class Figther extends Sprite {
         }else{
             this.swichSprites('takehit')
         }
-        this.health -= 20
+        this.health -= 15
     }
 
     swichSprites(sprite){
