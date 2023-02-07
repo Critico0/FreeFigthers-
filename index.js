@@ -357,7 +357,8 @@ function colision({obj1, obj2}){
 
 function horizontalColision({obj1}){
     return(
-        obj1.position.x + obj1.width >= canvas.width
+        obj1.position.x + obj1.width + obj1.velocity.x >= canvas.width ||
+        obj1.position.x -obj1.width + obj1.velocity.x <= 0
     );
 }
 
@@ -392,7 +393,7 @@ function animate(){
             }
     }
 
-    if(player1.lastDirection === 'right' && !horizontalColision({obj1:player1})){
+    if(player1.lastDirection === 'right'){
         if (keys.d.pressed && player1.lastKey === 'd'){
             player1.velocity.x = +5
             player1.swichSprites('run')
@@ -405,11 +406,11 @@ function animate(){
            else if(player1.velocity.y > 0){
             player1.swichSprites('fall')
         }
-    }else{
-        player1.velocity.x = 0;
     }
 
-    
+    if(horizontalColision({obj1: player1})){
+        player1.velocity.x = 0
+    }
     
 // keyboar movement Opponent
 
@@ -439,6 +440,10 @@ function animate(){
              opponent.swichSprites('fall')
          }
 }
+
+    if(horizontalColision({obj1: opponent})){
+        opponent.velocity.x = 0
+    }
 
 
 // Attack
