@@ -231,7 +231,13 @@ window.addEventListener('keydown',(event) =>{
     if(!player1.dead){
     switch(event.key){
         case 'w':
-            player1.velocity.y = -20
+            if(player1.lastKey != 'w'){
+                player1.velocity.y = -20
+                player1.lastKey = 'w'
+                setTimeout(()=>{
+                    player1.lastKey = ''
+                },1000)
+            }
         break
         case 'a':
             keys.a.pressed = true
@@ -349,6 +355,12 @@ function colision({obj1, obj2}){
     );
 }
 
+function horizontalColision({obj1}){
+    return(
+        obj1.position.x + obj1.width >= canvas.width
+    );
+}
+
 
 // Loop Animate
 
@@ -380,7 +392,7 @@ function animate(){
             }
     }
 
-    if(player1.lastDirection === 'right'){
+    if(player1.lastDirection === 'right' && !horizontalColision({obj1:player1})){
         if (keys.d.pressed && player1.lastKey === 'd'){
             player1.velocity.x = +5
             player1.swichSprites('run')
@@ -393,7 +405,10 @@ function animate(){
            else if(player1.velocity.y > 0){
             player1.swichSprites('fall')
         }
+    }else{
+        player1.velocity.x = 0;
     }
+
     
     
 // keyboar movement Opponent
@@ -432,7 +447,7 @@ function animate(){
     player1.attacking && 
     player1.framesCurrent === player1.hitFrame){
         opponent.takeHit()
-        document.querySelector('#player2HealthBar').style.width = opponent.health + '%'
+        gsap.to('#player2HealthBar',{width: opponent.health + '%'})
     }
     if(player1.attacking && player1.framesCurrent === player1.hitFrame){
         player1.attacking = false
@@ -442,7 +457,7 @@ function animate(){
     opponent.attacking &&
     opponent.framesCurrent === opponent.hitFrame){
         player1.takeHit()
-        document.querySelector('#player1HealthBar').style.width = player1.health + '%'
+        gsap.to('#player1HealthBar',{width: player1.health + '%'})
     }
     if(opponent.attacking && opponent.framesCurrent === opponent.hitFrame){
         opponent.attacking = false
