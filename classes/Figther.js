@@ -246,7 +246,7 @@ class Figther extends Sprite {
         this.attackbox.position.x = this.position.x + this.attackbox.offset.x
         this.attackbox.position.y = this.position.y + this.attackbox.offset.y
         
-        //ctx.fillRect(this.attackbox.position.x,this.attackbox.position.y,this.attackbox.width,this.attackbox.height)
+        ctx.fillRect(this.attackbox.position.x,this.attackbox.position.y,this.attackbox.width,this.attackbox.height)
     
     }
 }
