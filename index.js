@@ -447,11 +447,7 @@ function animate(){
     if(colision({obj1 : player1, obj2 : opponent}) && 
     player1.attacking && 
     player1.framesCurrent === player1.hitFrame){
-        if(opponent.lastDirection === 'left'){
-            opponent.takehitleft()
-        }else{
-            opponent.takeHit()
-        }
+        opponent.takeHit()
         document.querySelector('#player2HealthBar').style.width = opponent.health + '%'
     }
     if(player1.attacking && player1.framesCurrent === player1.hitFrame){
@@ -461,11 +457,7 @@ function animate(){
     if(colision({obj1 : opponent, obj2 : player1}) && 
     opponent.attacking &&
     opponent.framesCurrent === opponent.hitFrame){
-        if(player1.lastDirection === 'left'){
-            player1.takehitleft()
-        }else{
-            player1.takeHit()
-        }
+        player1.takeHit()
         document.querySelector('#player1HealthBar').style.width = player1.health + '%'
     }
     if(opponent.attacking && opponent.framesCurrent === opponent.hitFrame){

@@ -83,7 +83,11 @@ class Figther extends Sprite {
 }
 
     takeHit(){
-        this.swichSprites('takehit')
+        if(this.lastDirection === 'left'){
+            this.swichSprites('takehitleft')
+        }else{
+            this.swichSprites('takehit')
+        }
         this.health -= 20
     }
 
