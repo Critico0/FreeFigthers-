@@ -98,11 +98,7 @@ const player1 = new Figther ({
         death:{
             imagesrc:"./img/samurai/Death.png",
             frameMax: 6,
-        },
-        deathleft:{
-            imagesrc:"./img/samurai/Deathleft.png",
-            frameMax: 6,
-        },
+        }
     },
     attackbox:{
         offset:{
@@ -196,11 +192,8 @@ const opponent = new Figther({
         death:{
             imagesrc:"./img/monk/Death.png",
             frameMax: 11,
-        },
-        deathleft:{
-            imagesrc:"./img/monk/Deathleft.png",
-            frameMax: 11,
         }
+        
     },
     attackbox:{
         offset:{
@@ -322,20 +315,11 @@ function determineWinner(player1, opponent){
         }
     else if( player1.health > opponent.health ){
             document.querySelector('#displayText').innerHTML = 'Player 1 Wins'
-            if(opponent.lastDirection === 'left'){
-                opponent.swichSprites('deathleft')
-            }else{
-                opponent.swichSprites('death')
-            }
-            
+            opponent.swichSprites('death')           
         }
     else if(opponent.health > player1.health){
             document.querySelector('#displayText').innerHTML = 'Player 2 Wins'
-            if(player1.lastDirection === 'left'){
-                player1.swichSprites('deathleft')
-            }else{
-                player1.swichSprites('death')
-            }          
+                player1.swichSprites('death')      
         }
 }
 

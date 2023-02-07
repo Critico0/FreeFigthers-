@@ -114,10 +114,6 @@ class Figther extends Sprite {
             (this.framesCurrent < this.sprites.death.frameMax -1)
             this.dead = true
              return}
-             if(this.image === this.sprites.deathleft.image){
-                (this.framesCurrent < this.sprites.deathleft.frameMax -1)
-                this.dead = true
-                 return}
 
         switch(sprite){
             case 'idle':
@@ -229,13 +225,6 @@ class Figther extends Sprite {
                 this.framesCurrent = 0
                 }
             break;
-            case 'deathleft':
-                if(this.image !== this.sprites.deathleft.image){
-                this.image = this.sprites.deathleft.image
-                this.frameMax = this.sprites.deathleft.frameMax
-                this.framesCurrent = 0
-                }
-            break;
         }
     }
 
@@ -250,7 +239,7 @@ class Figther extends Sprite {
         this.attackbox.position.x = this.position.x + this.attackbox.offset.x
         this.attackbox.position.y = this.position.y + this.attackbox.offset.y
         
-        ctx.fillRect(this.attackbox.position.x,this.attackbox.position.y,this.attackbox.width,this.attackbox.height)
+        //ctx.fillRect(this.attackbox.position.x,this.attackbox.position.y,this.attackbox.width,this.attackbox.height)
     
     }
 }
