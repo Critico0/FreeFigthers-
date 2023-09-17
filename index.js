@@ -1,19 +1,58 @@
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 
-canvas.width = 1024;
-canvas.height = 576;
+//canvas.width = 1024;
+//canvas.height = 576;
+
+const screenWidth = window.innerWidth;
+const screenHeight = window.innerHeight;
+
+canvas.width = screenWidth;
+canvas.height = screenHeight;
 
 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+const backgroundImage = new Image();
+backgroundImage.src = "./img/background.png";
+
+backgroundImage.onload = () => {
+  const newWidth = canvas.width;
+  const newHeight = canvas.height;
+
+  const backgroundSprite = new Sprite({
+    position: {
+      x: 0,
+      y: 0,
+    },
+    image: backgroundImage,
+    width: newWidth, // Ancho deseado
+    height: newHeight, // Alto deseado
+  });
+  console.log('shit')
+  // Luego, en tu bucle de juego o donde corresponda, puedes dibujar el sprite en el canvas
+  backgroundSprite.draw(ctx);
+}
+
 const gravity = 0.7;
 
-const background = new Sprite({
-  position: {
-    x: 0,
-    y: 0,
-  },
-  imagesrc: "./img/background.png",
+// const background = new Sprite({
+//   position: {
+//     x: 0,
+//     y: 0,
+//   },
+//   imagesrc: "./img/background.png",
+//   width : screenWidth,
+// });
+
+window.addEventListener("resize", () => {
+  const newScreenWidth = window.innerWidth;
+  const newScreenHeight = window.innerHeight;
+  
+  canvas.width = newScreenWidth;
+  canvas.height = newScreenHeight;
+  
+  // También puedes querer volver a dibujar el contenido en el canvas cuando se redimensione
+  // Aquí puedes volver a dibujar tu fondo u otros elementos.
 });
 
 // Player1
@@ -365,16 +404,17 @@ function horizontalColision({ obj1 }) {
 
 function animate() {
   window.requestAnimationFrame(animate);
-  ctx.fillStyle = "black";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  background.update();
+  ctx.drawImage(backgroundImage,0,0,canvas.width,canvas.height)
   player1.update();
   opponent.update();
+
+  
 
   player1.velocity.x = 0;
   opponent.velocity.x = 0;
 
   // keyboar movement Player
+  
   if (player1.lastDirection === "left") {
     if (keys.a.pressed) {
       player1.velocity.x = -5;
