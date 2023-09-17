@@ -48,9 +48,8 @@ class Figther extends Sprite {
   applyGravity() {
     this.position.y += this.velocity.y;
 
-    if (this.position.y + this.height + this.velocity.y >= canvas.height - 35) {
+    if (this.position.y + this.height + this.velocity.y >= canvas.height - 155) {
       this.velocity.y = 0;
-      this.position.y = 391.19;
     } else {
       this.velocity.y += gravity;
     }
@@ -249,6 +248,7 @@ class Figther extends Sprite {
     this.attackbox.position.x = this.position.x + this.attackbox.offset.x;
     this.attackbox.position.y = this.position.y + this.attackbox.offset.y;
 
-    //ctx.fillRect(this.attackbox.position.x,this.attackbox.position.y,this.attackbox.width,this.attackbox.height)
+    // ctx.fillStyle = 'rgba(225,225,225,0.5)';
+    // ctx.fillRect(this.attackbox.position.x,this.attackbox.position.y,this.attackbox.width,this.attackbox.height)
   }
 }

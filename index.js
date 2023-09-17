@@ -1,9 +1,6 @@
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 
-//canvas.width = 1024;
-//canvas.height = 576;
-
 const screenWidth = window.innerWidth;
 const screenHeight = window.innerHeight;
 
@@ -25,24 +22,15 @@ backgroundImage.onload = () => {
       y: 0,
     },
     image: backgroundImage,
-    width: newWidth, // Ancho deseado
-    height: newHeight, // Alto deseado
+    width: newWidth, 
+    height: newHeight, 
   });
-  console.log('shit')
-  // Luego, en tu bucle de juego o donde corresponda, puedes dibujar el sprite en el canvas
   backgroundSprite.draw(ctx);
 }
 
 const gravity = 0.7;
+const originalImageWidth = 100;
 
-// const background = new Sprite({
-//   position: {
-//     x: 0,
-//     y: 0,
-//   },
-//   imagesrc: "./img/background.png",
-//   width : screenWidth,
-// });
 
 window.addEventListener("resize", () => {
   const newScreenWidth = window.innerWidth;
@@ -50,20 +38,19 @@ window.addEventListener("resize", () => {
   
   canvas.width = newScreenWidth;
   canvas.height = newScreenHeight;
+
   
-  // También puedes querer volver a dibujar el contenido en el canvas cuando se redimensione
-  // Aquí puedes volver a dibujar tu fondo u otros elementos.
 });
 
 // Player1
 
 const player1 = new Figther({
-  position: { x: 256, y: 100 },
+  position: { x: (canvas.width*0.15), y: 100 },
   imagesrc: "./img/samurai/Idle.png",
   frameMax: 8,
   doubleHit: false,
   velocity: { x: 0, y: 0 },
-  scale: 2.5,
+  scale: 3.5,
   lastDirection: "right",
   grounded: true,
   offset: {
@@ -142,28 +129,28 @@ const player1 = new Figther({
   },
   attackbox: {
     offset: {
-      x: 90,
+      x: 170,
       y: 10,
     },
-    width: 130,
-    height: 100,
+    width: 250,
+    height: 250,
   },
 });
 
 // Opponent
 
 const opponent = new Figther({
-  position: { x: 656, y: 100 },
+  position: { x: (canvas.width/1.30), y: 100 },
   imagesrc: "./img/monk/Idleleft.png",
   frameMax: 10,
   doubleHit: false,
   velocity: { x: 0, y: 0 },
-  scale: 2.5,
+  scale: 3.5,
   lastDirection: "left",
   grounded: true,
   offset: {
     x: 180,
-    y: 65,
+    y: 25,
   },
   sprites: {
     idle: {
@@ -237,10 +224,10 @@ const opponent = new Figther({
   attackbox: {
     offset: {
       x: -180,
-      y: 30,
+      y: -4,
     },
-    width: 110,
-    height: 100,
+    width: 360,
+    height: 265,
   },
 });
 
@@ -287,7 +274,7 @@ window.addEventListener("keydown", (event) => {
         keys.d.pressed = true;
         //player1.attackbox.offset.x = 0
         player1.lastKey = "d";
-        player1.attackbox.offset.x = 90;
+        player1.attackbox.offset.x = 180;
         player1.lastDirection = "right";
         break;
       case "k":
@@ -319,7 +306,7 @@ window.addEventListener("keydown", (event) => {
         keys.ArrowRigth.pressed = true;
         //opponent.attackbox.offset.x = 0
         opponent.lastKey = "ArrowRight";
-        opponent.attackbox.offset.x = 20;
+        opponent.attackbox.offset.x = -90;
         opponent.lastDirection = "right";
         break;
       case "0":
